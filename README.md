@@ -9,44 +9,44 @@ Para poder utilizar este tutorial deberas tener:
 
 ### Instalacion
 
-#### Actualizar la lista de paquetes
+##### Actualizar la lista de paquetes
 ```
 sudo apt update
 ```
-#### Instalar python
+##### Instalar python
 ```
 sudo apt install python3
 ```
 #### Instalar ansible y configurar ansible
 
-##### Agregar el respositorio de ansible
+###### Agregar el respositorio de ansible
 ```
 sudo apt-add-repository ppa:ansible/ansible
 ```
-##### Actualizar la lista de paquetes
+###### Actualizar la lista de paquetes
 ```
 sudo apt update
 ```
-##### Instalar ansible
+###### Instalar ansible
 ```
 sudo apt install ansible
 ```
-##### Configurar como interprete de python el instalado anteriormente
+###### Configurar como interprete de python el instalado anteriormente
 ```
 echo "
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
 " > /etc/ansible/hosts
 ```
-##### Instalar git
+###### Instalar git
 ```
 sudo apt install git
 ```
-##### Clonar el repositorio con los playbooks
+###### Clonar el repositorio con los playbooks
 ```
 git clone https://github.com/pigeon-e-shop/SIGTO-server.git
 ```
-##### Ejecutar el playbook
+###### Ejecutar el playbook
 ```
 ansible-playbook -i /home/pigeon/SIGTO-server/config/inventario.ini /home/pigeon/SIGTO-server/playbooks/setup.yml
 ```
