@@ -2,7 +2,7 @@
 
 ## Manual de instalacion
 
-### Pre-requisitos 📋
+### Pre-requisitos
 Para poder utilizar este tutorial deberas tener:
 + Ubuntu Server 24.04 LTS
 + Conexion a internet
@@ -48,7 +48,7 @@ git clone https://github.com/pigeon-e-shop/SIGTO-server.git
 ```
 ##### Ejecutar el playbook
 ```
-ansible /home/pigeon/SIGTO-server/setup.yml
+ansible-playbook -i /home/pigeon/SIGTO-server/config/inventario.ini /home/pigeon/SIGTO-server/playbooks/setup.yml
 ```
 ##### Reiniciar
 ```
