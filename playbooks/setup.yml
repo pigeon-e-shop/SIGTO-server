@@ -1,0 +1,75 @@
+---
+- name: Instalar LAMP en un servidor y configurar nano
+  hosts: servidores
+  become: yes 
+  tasks:
+    - name: Instalar Apache
+      apt:
+        name: apache2
+        state: present
+      notify:
+        - Habilitar y arrancar Apache
+
+    - name: Instalar MySQL
+      apt:
+        name: mysql-server
+        state: present
+      notify:
+        - Habilitar y arrancar MySQL
+
+    - name: Instalar PHP y módulos
+      apt:
+        name:
+          - php
+          - libapache2-mod-php
+          - php-mysql
+        state: present
+      notify:
+        - Habilitar y arrancar Apache
+
+    - name: Instalar nano
+      apt:
+        name: nano
+        state: present
+
+    - name: Configurar nano como editor por defecto
+      lineinfile:
+        path: /etc/environment
+        line: 'EDITOR=nano'
+        create: yes
+
+    - name: Instalar utilidades adicionales
+      apt:
+        name:
+          - curl
+          - git
+          - openssh-server
+          - net-tools
+          - ufw
+        state: present
+
+    - name: Clonar el repositorio pigeon-e-shop/SIGTO
+      git:
+        repo: 'https://github.com/pigeon-e-shop/SIGTO.git'
+        dest: /var/www/html/SIGTO
+        update: yes
+
+    - name: Importar base de datos desde el archivo SQL
+      mysql_db:
+        name: 'pigeon'
+        state: import
+        target: /var/www/html/SIGTO/Config/Database.sql
+      when: ansible_os_family == "Debian"  
+
+  handlers:
+    - name: Habilitar y arrancar Apache
+      systemd:
+        name: apache2
+        enabled: yes
+        state: started
+
+    - name: Habilitar y arrancar MySQL
+      systemd:
+        name: mysql
+        enabled: yes
+        state: started
