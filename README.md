@@ -27,13 +27,6 @@ sudo apt update
 ```
 sudo apt install ansible
 ```
-###### Configurar como interprete de python el instalado anteriormente
-```
-echo "
-[all:vars]
-ansible_python_interpreter=/usr/bin/python3
-" > /etc/ansible/hosts
-```
 ###### Instalar git
 ```
 sudo apt install git
