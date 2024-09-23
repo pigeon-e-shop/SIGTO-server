@@ -19,10 +19,6 @@ sudo apt install python3
 ```
 #### Instalar ansible y configurar ansible
 
-###### Agregar el respositorio de ansible
-```
-sudo apt-add-repository ppa:ansible/ansible
-```
 ###### Actualizar la lista de paquetes
 ```
 sudo apt update
