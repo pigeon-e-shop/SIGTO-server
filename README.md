@@ -37,7 +37,7 @@ git clone https://github.com/pigeon-e-shop/SIGTO-server.git
 ```
 ###### Ejecutar el playbook
 ```
-ansible-playbook -i /home/pigeon/SIGTO-server/config/inventario.ini /home/pigeon/SIGTO-server/playbooks/setup.yml
+ansible-playbook -i /home/pigeon/SIGTO-server/settings/inventario.ini /home/pigeon/SIGTO-server/playbooks/setup.yml
 ```
 ##### Reiniciar
 ```
