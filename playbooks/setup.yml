@@ -1,5 +1,5 @@
 ---
-- name: Instalar LAMP en un servidor y configurar nano
+- name: Setup servidor Pigeon e-Shop
   hosts: servidores
   become: yes 
   tasks:
