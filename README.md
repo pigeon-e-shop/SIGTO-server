@@ -54,5 +54,3 @@ ansible /home/pigeon/SIGTO-server/setup.yml
 ```
 reboot
 ```
-
-### 
