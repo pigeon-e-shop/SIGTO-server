@@ -47,6 +47,7 @@
           - net-tools
           - ufw
           - python3-mysql.connector
+          - python3-mysqldb
         state: present
 
     - name: Clonar el repositorio pigeon-e-shop/SIGTO
@@ -60,7 +61,8 @@
         name: 'pigeon'
         state: import
         target: /var/www/html/SIGTO/Config/Database.sql
-      when: ansible_os_family == "Debian"  
+        login_user: 'root'
+        login_password: ''
 
   handlers:
     - name: Habilitar y arrancar Apache
