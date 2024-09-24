@@ -46,6 +46,7 @@
           - openssh-server
           - net-tools
           - ufw
+          - python3-mysql.connector
         state: present
 
     - name: Clonar el repositorio pigeon-e-shop/SIGTO
