@@ -156,14 +156,8 @@
         dest: /var/www/html/SIGTO
         update: yes
 
-    - name: Importar base de datos desde el archivo SQL
-      mysql_db:
-        name: 'pigeon'
-        state: import
-        target: /var/www/html/SIGTO/Config/Database.sql
-        login_user: 'root'
-        login_password: ''
-
+    - name: Ejecutar setup-docker.yml
+      shell: ansible-playbook -i /home/pigeon/SIGTO-server/settings/inventario.ini /home/pigeon/SIGTO-server/playbooks/setup-docker.yml
   handlers:
     - name: Habilitar y arrancar Apache
       systemd:
