@@ -3,19 +3,16 @@
   hosts: servidores
   become: yes 
   tasks:
+    - name: Actualizar la lista de paquetes
+      apt:
+        update_cache: yes
+
     - name: Instalar Apache
       apt:
         name: apache2
         state: present
       notify:
         - Habilitar y arrancar Apache
-
-    - name: Instalar MySQL
-      apt:
-        name: mysql-server
-        state: present
-      notify:
-        - Habilitar y arrancar MySQL
 
     - name: Instalar PHP y módulos
       apt:
@@ -38,117 +35,25 @@
         line: 'EDITOR=nano'
         create: yes
 
-   - name: Actualizar la lista de paquetes
+    - name: Instalar utilidades adicionales
       apt:
-        update_cache: yes
-
-    - name: Instalar curl
-      apt:
-        name: curl
+        name:
+          - curl
+          - git
+          - openssh-server
+          - net-tools
+          - ufw
+          - mariadb-server
+          - mariadb-client
+          - python3-mysqldb  # Cambiado a mysqldb para compatibilidad con MariaDB
         state: present
-      register: curl_install
-      changed_when: curl_install.changed
+      register: utils_install
+      changed_when: utils_install.changed
 
-    - name: Mensaje de instalación de curl
+    - name: Mensaje de instalación de utilidades
       debug:
-        msg: "curl se ha instalado correctamente."
-      when: curl_install.changed
-
-    - name: Instalar git
-      apt:
-        name: git
-        state: present
-      register: git_install
-      changed_when: git_install.changed
-
-    - name: Mensaje de instalación de git
-      debug:
-        msg: "git se ha instalado correctamente."
-      when: git_install.changed
-
-    - name: Instalar openssh-server
-      apt:
-        name: openssh-server
-        state: present
-      register: openssh_install
-      changed_when: openssh_install.changed
-
-    - name: Mensaje de instalación de openssh-server
-      debug:
-        msg: "openssh-server se ha instalado correctamente."
-      when: openssh_install.changed
-
-    - name: Instalar net-tools
-      apt:
-        name: net-tools
-        state: present
-      register: net_tools_install
-      changed_when: net_tools_install.changed
-
-    - name: Mensaje de instalación de net-tools
-      debug:
-        msg: "net-tools se ha instalado correctamente."
-      when: net_tools_install.changed
-
-    - name: Instalar UFW
-      apt:
-        name: ufw
-        state: present
-      register: ufw_install
-      changed_when: ufw_install.changed
-
-    - name: Mensaje de instalación de UFW
-      debug:
-        msg: "UFW se ha instalado correctamente."
-      when: ufw_install.changed
-
-    - name: Instalar MariaDB Server
-      apt:
-        name: mariadb-server
-        state: present
-      register: mariadb_server_install
-      changed_when: mariadb_server_install.changed
-
-    - name: Mensaje de instalación de MariaDB Server
-      debug:
-        msg: "MariaDB Server se ha instalado correctamente."
-      when: mariadb_server_install.changed
-
-    - name: Instalar MariaDB Client
-      apt:
-        name: mariadb-client
-        state: present
-      register: mariadb_client_install
-      changed_when: mariadb_client_install.changed
-
-    - name: Mensaje de instalación de MariaDB Client
-      debug:
-        msg: "MariaDB Client se ha instalado correctamente."
-      when: mariadb_client_install.changed
-
-    - name: Instalar conector de MySQL para Python 3
-      apt:
-        name: python3-mysqldb
-        state: present
-      register: mysql_connector_install
-      changed_when: mysql_connector_install.changed
-
-    - name: Mensaje de instalación de python3-mysqldb
-      debug:
-        msg: "El conector de MySQL para Python 3 se ha instalado correctamente."
-      when: mysql_connector_install.changed
-
-    - name: Instalar mariadb-client-core-10.3
-      apt:
-        name: mariadb-client-core-10.3
-        state: present
-      register: mariadb_client_core_install
-      changed_when: mariadb_client_core_install.changed
-
-    - name: Mensaje de instalación de mariadb-client-core-10.3
-      debug:
-        msg: "mariadb-client-core-10.3 se ha instalado correctamente."
-      when: mariadb_client_core_install.changed
+        msg: "Las utilidades adicionales se han instalado correctamente."
+      when: utils_install.changed
 
     - name: Clonar el repositorio pigeon-e-shop/SIGTO
       git:
@@ -162,7 +67,7 @@
         state: import
         target: /var/www/html/SIGTO/Config/Database.sql
         login_user: 'root'
-        login_password: ''
+        login_password: ''  # Cambia esto si tienes una contraseña establecida
 
   handlers:
     - name: Habilitar y arrancar Apache
@@ -173,6 +78,6 @@
 
     - name: Habilitar y arrancar MySQL
       systemd:
-        name: mysql
+        name: mariadb
         enabled: yes
         state: started
