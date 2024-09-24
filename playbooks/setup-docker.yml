@@ -1,0 +1,64 @@
+---
+- name: Setup servidor Pigeon e-Shop con Docker
+  hosts: servidores
+  become: yes
+  tasks:
+
+    - name: Instalar dependencias necesarias
+      apt:
+        name: 
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Agregar llave GPG para el repositorio de Docker
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Agregar el repositorio Docker
+      apt_repository:
+        repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Actualizar la cache de apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar Docker
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Iniciar y habilitar Docker
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Instalar Docker Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m`
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Crear el archivo docker-compose.yml en el servidor
+      copy:
+        src: /path/local/al/docker-compose.yml
+        dest: /home/pigeon/docker-compose.yml
+        mode: '0644'
+
+    - name: Ejecutar docker-compose para levantar los servicios
+      command: docker-compose -f /home/pigeon/docker-compose.yml up -d
+      args:
+        chdir: /home/pigeon
+
+    - name: Verificar si los contenedores están corriendo
+      command: docker ps
+      register: docker_status
+
+    - name: Mostrar el estado de los contenedores
+      debug:
+        var: docker_status.stdout
