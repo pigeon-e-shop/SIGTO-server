@@ -10,12 +10,12 @@
       notify:
         - Habilitar y arrancar Apache
 
-    - name: Instalar MySQL
+    - name: Instalar MariaDB
       apt:
-        name: mysql-server
+        name: mariaDB-server
         state: present
       notify:
-        - Habilitar y arrancar MySQL
+        - Habilitar y arrancar MariaDB
 
     - name: Instalar PHP y módulos
       apt:
@@ -126,17 +126,17 @@
         msg: "MariaDB Client se ha instalado correctamente."
       when: mariadb_client_install.changed
 
-    - name: Instalar conector de MySQL para Python 3
+    - name: Instalar conector de MariaDb para Python 3
       apt:
-        name: python3-mysqldb
+        name: python3-mariadb
         state: present
-      register: mysql_connector_install
-      changed_when: mysql_connector_install.changed
+      register: mariadb_connector_install
+      changed_when: mariadb_connector_install.changed
 
-    - name: Mensaje de instalación de python3-mysqldb
+    - name: Mensaje de instalación de python3-mariadb
       debug:
-        msg: "El conector de MySQL para Python 3 se ha instalado correctamente."
-      when: mysql_connector_install.changed
+        msg: "El conector de MariaDB para Python 3 se ha instalado correctamente."
+      when: mariadb_connector_install.changed
 
     - name: Instalar mariadb-client-core-10.3
       apt:
@@ -165,8 +165,8 @@
         enabled: yes
         state: started
 
-    - name: Habilitar y arrancar MySQL
+    - name: Habilitar y arrancar MariaDB
       systemd:
-        name: mysql
+        name: mariadb
         enabled: yes
         state: started
