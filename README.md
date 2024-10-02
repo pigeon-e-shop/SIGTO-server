@@ -33,6 +33,6 @@ git clone https://github.com/pigeon-e-shop/SIGTO.git
 ##### Contruir el docker-compose.yml con docker-compose
 ```
 cd /home/pigeon/SIGTO
-sudo docker-compose --build -d
+sudo docker-compose up --build -d
 ```
 
