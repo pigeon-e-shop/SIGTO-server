@@ -13,33 +13,26 @@ Para poder utilizar este tutorial deberas tener:
 ```
 sudo apt update
 ```
-##### Instalar python
-```
-sudo apt install python3
-```
-#### Instalar ansible y configurar ansible
-
-###### Actualizar la lista de paquetes
-```
-sudo apt update
-```
-###### Instalar ansible
-```
-sudo apt install ansible
-```
-###### Instalar git
+##### Instalar git
 ```
 sudo apt install git
 ```
-###### Clonar el repositorio con los playbooks
+##### Clonar el repositorio SIGTO-server
 ```
 git clone https://github.com/pigeon-e-shop/SIGTO-server.git
 ```
-###### Ejecutar el playbook
+##### Ejecutar el .sh llamado install_docker.sh
 ```
-ansible-playbook -i /home/pigeon/SIGTO-server/settings/inventario.ini /home/pigeon/SIGTO-server/playbooks/setup.yml
+sudo su
+cd /home/pigeon/SIGTO-server/scripts && ./install_docker.sh
 ```
-##### Reiniciar
+##### Clonar el respositorio principal
 ```
-reboot
+git clone https://github.com/pigeon-e-shop/SIGTO.git
 ```
+##### Contruir el docker-compose.yml con docker-compose
+```
+cd /home/pigeon/SIGTO
+sudo docker-compose --build -d
+```
+
