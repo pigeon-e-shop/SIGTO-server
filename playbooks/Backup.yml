@@ -1,0 +1,14 @@
+---
+- name: Respaldo Pigeon e-Shop
+  hosts: servidores
+  become: yes
+  tasks:
+    - name: Dumpear BD
+      shell: mysqldump -u pigeon -p pigeon > /var/log/pigeon
+
+    - name: Empaquetar respaldo
+      community.general.archive:
+        path: 
+          - /var/log/pigeon
+        dest: /home/pigeon/respaldo_pigeon.tar.gz
+        format: gz
