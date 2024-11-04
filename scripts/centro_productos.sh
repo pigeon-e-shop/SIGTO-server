@@ -197,6 +197,7 @@ manage_logs() {
             	;;
           5)
               sh logs_login.sh
+	      ;;
         	0)
             	break
             	;;
