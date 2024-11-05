@@ -1,14 +1,54 @@
 ---
-- name: Respaldo Pigeon e-Shop
+- name: Configurar y realizar respaldo de Pigeon e-Shop
   hosts: servidores
   become: yes
-  tasks:
-    - name: Dumpear BD
-      shell: mysqldump -u pigeon -p pigeon > /var/log/pigeon
+  vars:
+    mysql_password: "{{ mysql_root_password }}"
 
-    - name: Empaquetar respaldo
+  tasks:
+
+    - name: Instalar herramientas de respaldo (rsync, cron, gzip)
+      apt:
+        name:
+          - rsync
+          - cron
+          - gzip
+        state: present
+
+    - name: Verificar existencia del directorio de respaldo
+      file:
+        path: /home/pigeon
+        state: directory
+        mode: '0755'
+
+    - name: Verificar existencia del directorio de logs de respaldo
+      file:
+        path: /var/log/pigeon
+        state: directory
+        mode: '0755'
+
+    - name: Dumpear base de datos de Pigeon
+      shell: |
+        mysqldump -u pigeon -p{{ mysql_password }} pigeon > /var/log/pigeon_{{ ansible_date_time.iso8601 }}.sql
+      args:
+        creates: "/var/log/pigeon_{{ ansible_date_time.iso8601 }}.sql"
+
+    - name: Empaquetar el respaldo de la base de datos
       community.general.archive:
         path: 
-          - /var/log/pigeon
-        dest: /home/pigeon/respaldo_pigeon.tar.gz
+          - "/var/log/pigeon_{{ ansible_date_time.iso8601 }}.sql"
+        dest: "/home/pigeon/respaldo_pigeon_{{ ansible_date_time.iso8601 }}.tar.gz"
         format: gz
+
+    - name: Configurar trabajo cron para respaldos automáticos
+      cron:
+        name: "Respaldo diario de Pigeon"
+        minute: "0"
+        hour: "2"
+        job: "/usr/bin/rsync -avz /home/pigeon/ /mnt/backups/"
+        user: root
+        state: present
+        
+    - name: Mostrar mensaje de éxito
+      debug:
+        msg: "El respaldo de la base de datos Pigeon e-Shop se completó correctamente."
