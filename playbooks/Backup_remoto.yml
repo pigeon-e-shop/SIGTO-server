@@ -1,0 +1,30 @@
+---
+- name: Respaldo remoto de archivos pigeon
+  hosts: backup_server   # El servidor de respaldo, debe estar definido en tu inventario
+  become: yes            # Para ejecutar las tareas como root
+  vars:
+    source_server: "servidor_principal"   # Nombre del servidor principal donde están los archivos
+    source_user: "usuario"                # Usuario con permisos de lectura en el servidor principal
+    source_dir: "/var/log"                # Directorio donde se encuentran los archivos pigeon_ (en el servidor principal)
+    destination_dir: "/home/pigeon/backups"  # Directorio donde se guardarán los archivos en el servidor de respaldo
+
+  tasks:
+
+    # 1. Crear el directorio de respaldo si no existe
+    - name: Crear el directorio de respaldo en el servidor de respaldo
+      file:
+        path: "{{ destination_dir }}"
+        state: directory
+        mode: '0755'
+
+    # 2. Copiar los archivos de pigeon_ desde el servidor principal
+    - name: Copiar los archivos pigeon_ desde el servidor principal al servidor de respaldo
+      ansible.builtin.command:
+        cmd: "rsync -avz -e ssh {{ source_user }}@{{ source_server }}:{{ source_dir }}/pigeon_* {{ destination_dir }}/"
+      delegate_to: localhost  # Ejecuta el comando localmente en el servidor de respaldo
+      become: false           # No es necesario usar `become` ya que el comando rsync no lo requiere por ahora
+
+    # 3. Verificación de éxito (opcional)
+    - name: Mostrar mensaje de éxito
+      debug:
+        msg: "Respaldo completo de archivos pigeon_ desde el servidor principal a {{ destination_dir }} en el servidor de respaldo."
