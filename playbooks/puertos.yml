@@ -1,0 +1,37 @@
+---
+- name: Habilitar puertos 3306 y 80 con UFW
+  hosts: servidores
+  become: yes
+  tasks:
+    - name: Asegurarse de que UFW está instalado
+      apt:
+        name: ufw
+        state: present
+
+    - name: Habilitar UFW si no está habilitado
+      ufw:
+        state: enabled
+        policy: allow
+        logging: on
+
+    - name: Permitir puerto 3306 (MySQL/MariaDB)
+      ufw:
+        rule: allow
+        name: 'MySQL'
+        port: '3306'
+        proto: tcp
+
+    - name: Permitir puerto 80 (HTTP)
+      ufw:
+        rule: allow
+        name: 'HTTP'
+        port: '80'
+        proto: tcp
+
+    - name: Verificar el estado de UFW
+      command: ufw status
+      register: ufw_status
+
+    - name: Mostrar el estado de UFW
+      debug:
+        var: ufw_status.stdout
