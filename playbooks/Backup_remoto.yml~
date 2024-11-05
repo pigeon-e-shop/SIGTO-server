@@ -15,7 +15,7 @@
       file:
         path: "{{ destination_dir }}"
         state: directory
-        mode: '0777'
+        mode: '0755'
 
     # 2. Copiar los archivos de pigeon_ desde el servidor principal
     - name: Copiar los archivos pigeon_ desde el servidor principal al servidor de respaldo

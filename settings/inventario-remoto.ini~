@@ -1,0 +1,13 @@
+[backup_server]
+servidor_respaldo.example.com ansible_user=root  # Servidor de respaldo, donde se almacenarán los archivos
+
+[servidor_principal]
+servidor_principal.example.com ansible_user=usuario  # Servidor principal, donde están los archivos de logs pigeon_
+
+[servidor_principal:vars]
+source_user=usuario            # Usuario con permisos para leer los archivos en el servidor principal
+source_dir="/var/log"          # Directorio de origen donde se encuentran los archivos pigeon_
+destination_dir="/home/pigeon/backups"  # Directorio de destino donde se guardarán los respaldos
+
+[backup_server:vars]
+source_server=servidor_principal.example.com   # El servidor desde donde se copiarán los archivos
